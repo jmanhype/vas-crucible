@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package vas.crucible;
+
+import "google/protobuf/empty.proto";
+
+service SandboxControl {
+  rpc CreateSandbox(CreateSandboxRequest) returns (CreateSandboxResponse);
+  rpc ExecuteCode(ExecuteRequest) returns (ExecuteResponse);
+  rpc TerminateSandbox(TerminateRequest) returns (google.protobuf.Empty);
+  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+}
+
+message CreateSandboxRequest {
+  string agent_id = 1;
+  string jwt = 2;
+  string intent_hash = 3;
+  ResourceLimits limits = 4;
+}
+
+message CreateSandboxResponse {
+  string sandbox_id = 1;
+  string pty_path = 2;
+  int64 created_at = 3;
+}
+
+message ExecuteRequest {
+  string sandbox_id = 1;
+  string jwt = 2;
+  string code = 3;
+  string language = 4;
+}
+
+message ExecuteResponse {
+  int32 exit_code = 1;
+  string stdout = 2;
+  string stderr = 3;
+  int64 duration_ms = 4;
+}
+
+message TerminateRequest {
+  string sandbox_id = 1;
+  string jwt = 2;
+}
+
+message ResourceLimits {
+  int32 cpu_cores = 1;
+  int64 memory_mb = 2;
+  bool network_enabled = 3;
+}
+
+message HeartbeatRequest {
+  string sandbox_id = 1;
+  string jwt = 2;
+}
+
+message HeartbeatResponse {
+  bool alive = 1;
+  int64 last_seen = 2;
+}
+
