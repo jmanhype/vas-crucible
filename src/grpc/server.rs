@@ -8,7 +8,7 @@ use crate::{
     grpc::generated::{
         sandbox_control_server::SandboxControl, CreateSandboxRequest, CreateSandboxResponse,
         ExecuteRequest, ExecuteResponse, HeartbeatRequest, HeartbeatResponse, ResourceLimits,
-        TerminateRequest,
+        TerminateRequest, Empty,
     },
     jwt::verifier::JwtVerifier,
     sandbox::{ResourceLimitConfig, SandboxConfig, SandboxManager},
@@ -136,7 +136,7 @@ impl SandboxControl for SandboxControlService {
     async fn terminate_sandbox(
         &self,
         request: Request<TerminateRequest>,
-    ) -> std::result::Result<Response<prost_types::Empty>, Status> {
+    ) -> std::result::Result<Response<Empty>, Status> {
         let request = request.into_inner();
         let intent_hash = Self::terminate_intent_hash(&request.sandbox_id);
         self.verifier
@@ -148,7 +148,7 @@ impl SandboxControl for SandboxControlService {
             .await
             .map_err(internal_status)?;
 
-        Ok(Response::new(prost_types::Empty {}))
+        Ok(Response::new(Empty {}))
     }
 
     async fn heartbeat(

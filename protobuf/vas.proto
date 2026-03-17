@@ -2,12 +2,10 @@ syntax = "proto3";
 
 package vas.crucible;
 
-import "google/protobuf/empty.proto";
-
 service SandboxControl {
   rpc CreateSandbox(CreateSandboxRequest) returns (CreateSandboxResponse);
   rpc ExecuteCode(ExecuteRequest) returns (ExecuteResponse);
-  rpc TerminateSandbox(TerminateRequest) returns (google.protobuf.Empty);
+  rpc TerminateSandbox(TerminateRequest) returns (Empty);
   rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
 }
 
@@ -58,4 +56,6 @@ message HeartbeatResponse {
   bool alive = 1;
   int64 last_seen = 2;
 }
+
+message Empty {}
 
